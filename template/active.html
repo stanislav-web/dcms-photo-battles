@@ -1,0 +1,133 @@
+<?php if(!defined('BATTLE')) die('Доступ запрещен!'); ?>
+<!-- Ожидающие батлы -->
+<link rel="stylesheet" href="template/assets/style.css" type="text/css" />
+<?if($this->error):?>
+    <div class="error">
+        <?php echo $this->error; ?>
+    </div>
+<?else:?>
+
+        <?if($this->GET['details']):?>
+            <!-- Просмотр участников -->
+            <?if($this->success):?>
+            <div class="success">
+                <?=$this->success;?>
+            </div>
+            <?endif;?>
+
+            <?php $i=0; foreach($this->items as $item):?>
+            
+            <?//Debug::deBug($this->category);?>
+
+            <div class="battles <?php echo ($i++%2==1) ? 'nav1' : 'nav2' ?>">
+                <div class="battles left icon48">
+                    <?avatar_ank($item['user_id']);?>
+                </div>
+                <div class="battles right">
+                    <div class="user"><a href="/info.php?id=<? echo $item['user_id'];?>"><? echo $item['nick'];?></a> <?=online($item[user_id]);?> <?=group($item[user_id]);?> <?=medal($item[user_id]);?></div>
+                    <div class="city">Город: <?php echo ($item['ank_city']) ? $item['ank_city'] : 'не указан' ?></div>
+                    <div class="votes">Голосов: <span class="<?if($item['votes'] >= 25):?>
+                                                  chockolate
+                                                  <?elseif($item['votes'] >= 50):?>
+                                                  brown
+                                                  <?elseif($item['votes'] >= 100):?>
+                                                    gold
+                                                  <?else:?>
+                                                  maxvote
+                                                  <?endif;?>"><?php echo $item['votes']?></span> 
+                        <?if($this->_USER['pol'] != $this->category->gender):?>
+                            <?if(!$this->isset):?>
+                                <a href="?view=active&details=<?=$this->category->id;?>&vote=<?=$item['user_id'];?>">
+                                    <img src="template/assets/thumb.png" class="icon" title="Отдать голос за <?=$item['nick'];?>">
+                                    Отдать голос за <?=$item['nick'];?>
+                                </a>                        
+                            <?else:?>
+                                <img src="template/assets/thumb_none.png" class="icon" title="Вы уже проголосовали в этом батле">
+                            <?endif;?>
+                        <?endif;?>
+                        
+                    </div>
+                    <div class="albums">
+                        <a href="/foto/<?php echo $item['user_id'];?>/"><img src="template/assets/gallery.png" class="icon"> Смотреть альбомы</a>
+                    </div>
+					<? if($this->_USER[group_access] >= MINADMIN): ?>
+					<div class="admin">
+						[<a href="?view=admin&action=userdel&id=<?php echo $item['user_id'];?>">Снять с участия (адм.)</a>]
+					</div>
+					<?endif;?>
+                    <div class="about"><?if($item['ank_o_sebe']):?>О себе: <?php echo $item['ank_o_sebe'];?><?endif;?></div>
+                </div>
+            </div>
+        <?endforeach;?>  
+        <div class="str">
+            Время окончания голосования: <strong><?echo Format::dateFormat($this->category->finish);?></strong>
+        </div>        
+        <div class="page_foot">
+            - <img src="template/assets/back.png" class="icon"> <a href="?view=active">Вернуться назад</a>
+        </div>        
+        <!-- Просмотр участников -->
+        <?else:?>
+        <?php $i=0; foreach($this->items as $item):?>
+            <?//Debug::deBug($item);?>
+            <?//Debug::deBug($this->category);?>
+            <div class="waiting <?php echo ($i++%2==1) ? 'nav1' : 'nav2' ?>">
+                <div class="left icon48">
+                    <a href="?view=<?php echo $this->GET['view'];?>&detail=<?php echo $item[id];?>">
+                        <img src="template/assets/<? echo ($item[gender]) ? 'bigman': 'biggirl'?>.png" alt="В ожидании" class="avatar">
+                    </a>                    
+                </div>
+                <div class="right">
+                    <div class="votes"><b>Батл №<?php echo $item[id];?></b></div>
+                    <div class="votes">До конца осталось <img class="icon" src="template/assets/clock.png"> <?echo Format::getOverTime(time(), $item['finish']);?></div>
+                    
+                    <?if($item['maxvote'] > 0):?>
+                    <div class="albums">Лидер: <span class="<?if($item['maxvote'] >= 25):?>
+                                                  chockolate
+                                                  <?elseif($item['maxvote'] >= 50):?>
+                                                  brown
+                                                  <?elseif($item['maxvote'] >= 100):?>
+                                                    gold
+                                                  <?else:?>
+                                                  maxvote
+                                                  <?endif;?>"><?=$item['maxvote'];?></span> <a href="/info.php?id=<?php echo $item[user_id];?>"><?php echo $item[user];?></a><?=online($item[user_id]);?> <?=group($item[user_id]);?> <?=medal($item[user_id]);?></div>
+                        <div class="albums">
+                            <a href="?view=active&details=<?php echo $item[id];?>">
+                                (Посмотреть участников)
+                            </a><? if($this->_USER[group_access] >= MINADMIN): ?> / [<a href="?view=admin&action=battledel&id=<?php echo $item[id];?>">Убрать (адм.)</a>]<?endif;?>
+                        </div>
+                    <?else:?>
+                    <div class="albums">Голосование уже идет, а голосов нет :((</div>
+                        <div class="albums">
+                            <a href="?view=active&details=<?php echo $item[id];?>">
+                                (Посмотреть участников)
+                            </a><? if($this->_USER[group_access] >= MINADMIN): ?> / [<a href="?view=admin&action=battledel&id=<?php echo $item[id];?>">Убрать (адм.)</a>]<?endif;?>
+                        </div>                    
+                    <?endif;?>
+                    <?if($item[mine] == 1):?><div class="albums"><b>Батл с моим участием!</b></div><?endif;?>
+                </div>
+                <div class="join">
+                    <?if($item['maxvote'] > 0):?>
+                        <a href="/foto/<?=$item[user_id];?>/" class="icon14">
+                            <img src="/foto/foto50/<?=$item[photo];?>.<?=$item[ext];?>" class="status">
+                        </a>                       
+                    <?else:?>
+                        <a href="?view=active&details=<?php echo $item[id];?>" class="icon14">
+                            <img src="template/assets/quest.png" class="status">
+                        </a>                    
+                    <?endif;?>
+                </div>
+            </div>
+        <?endforeach;?>        
+        <?endif;?>
+<?endif;?>
+<div class="page_foot">
+    - <img src="template/assets/my.png" class="icon"> <a href="?view=my">Мой батл</a><br>
+    - <img src="template/assets/join.png" class="icon"> <a href="?view=join">Присоединиться</a><br>
+    - <img src="template/assets/active.png" class="icon"> <b>Все активные батлы</b> (<strong><?echo $this->activec; ?></strong>)<br>
+    - <img src="template/assets/wait.png" class="icon"> <a href="?view=waiting">Ожидающие противников батлы</a> (<strong><?echo $this->deactivec; ?></strong>)<br>
+</div>
+<div class="str">
+    <img src="template/assets/rules.png" class="icon"> <a href="?view=rules">Правила батлов</a>
+    <img src="template/assets/back.png" class="icon"> <a href="?view=index">Назад к участникам</a>
+</div>
+<!-- Мой батл -->

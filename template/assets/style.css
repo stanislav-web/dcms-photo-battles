@@ -1,0 +1,91 @@
+/* 
+    Document   : styles
+    Created on : 19.08.2013, 22:51:14
+    Author     : WEB
+    Description:
+        Purpose of the stylesheet follows.
+*/
+
+.battles  { 
+    min-height: 128px;
+}
+.waiting { 
+    min-height: 75px !important;
+    width: 584px;
+    display: inline-block;    
+}
+ 
+.left { 
+    float: left;
+    width: 135px;
+    display: inline-block;
+}
+.right { 
+    width: 350px;
+float: left;
+}
+.join { 
+    width: 65px;
+    display: inline-block;
+    float: right;
+}
+.right .city { 
+    color: #8f8c85;
+}
+
+.joinbuttons form {
+    border: none !important;
+}
+.joinbuttons form input[type=submit] {
+    cursor: pointer;
+}
+.error {
+    border: 2px #8B7D7B groove;
+    padding: 5px;
+    background: #EED5D2;
+    border-radius: 9px;
+}
+.success {
+    padding: 5px;
+    background: #FFF5EE;    
+}
+.notice {
+    font-style: italic;
+    font-size: 12px;
+}
+
+.icon14 {
+    width: 53px;
+    height: 53px;
+    display: block;
+}
+
+span.maxvote {
+    color: #fff;
+    background: #9370DB;
+    border-radius: 2px;
+    padding: 1px;
+    font-size: 12px;    
+}
+
+span.gold {
+    color: #000;
+    background: #FFD700;
+    border-radius: 2px;
+    padding: 1px;
+    font-size: 12px;     
+}
+span.chockolate {
+    color: #fff;
+    background: #D2691E;
+    border-radius: 2px;
+    padding: 1px;
+    font-size: 12px;      
+}
+span.brown {
+    color: #fff;
+    background: #8B4513;
+    border-radius: 2px;
+    padding: 1px;
+    font-size: 12px;      
+}

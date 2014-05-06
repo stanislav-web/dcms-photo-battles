@@ -1,0 +1,58 @@
+<?php if(!defined('BATTLE')) die('Доступ запрещен!'); ?>
+<!-- Мой батл -->
+<link rel="stylesheet" href="template/assets/style.css" type="text/css" />
+<?if($this->error):?>
+    <div class="error">
+        <?php echo $this->error; ?>
+    </div>
+<?else:?>
+    <?php $i=0; foreach($this->items as $item):?>
+        <div class="battles <?php echo ($i++%2==1) ? 'nav1' : 'nav2' ?>">
+            <div class="battles left icon48">
+                <?avatar_ank($item['user_id']);?>
+            </div>
+            <div class="battles right">
+                <div class="user"><a href="/info.php?id=<? echo $item['user_id'];?>"><? echo $item['nick'];?></a> <?=online($item[user_id]);?> <?=group($item[user_id]);?> <?=medal($item[user_id]);?></div>
+                <div class="city">Город: <?php echo ($item['ank_city']) ? $item['ank_city'] : 'не указан' ?></div>
+                <div class="votes">Голосов: <span class="<?if($item['votes'] >= 25):?>
+                                                  chockolate
+                                                  <?elseif($item['votes'] >= 50):?>
+                                                  brown
+                                                  <?elseif($item['votes'] >= 100):?>
+                                                    gold
+                                                  <?else:?>
+                                                  maxvote
+                                                  <?endif;?>"><?php echo $item['votes']?></span></div>
+                <div class="albums">
+                    <a href="/foto/<?php echo $item['user_id'];?>/"><img src="template/assets/gallery.png" class="icon"> Мои альбомы</a>
+                </div>
+                <div class="about"><?if($item['ank_o_sebe']):?>О себе: <?php echo $item['ank_o_sebe'];?><?endif;?></div>
+            </div>
+        </div>
+    <?endforeach;?>
+    <div class="p_m">
+        <center>
+            <?php if($this->category->active == 0):?>
+                Этот батл (<b>№<?=$this->category->id;?></b>) еще не начался. Нужно еще <b><?php
+                if($this->category->gender == 1):
+                echo Format::declareRight(MAX-$this->category->players, array('парень', 'парня', 'парней'));
+                else:
+                echo Format::declareRight(MAX-$this->category->players, array('девушка', 'девушки', 'девушек'));
+                endif;?></b>
+            <?else:?>
+                Батл стартовал. Время окончания: <strong><?echo Format::dateFormat($this->category->finish);?></strong>
+            <?endif;?>
+        </center>
+    </div>
+<?endif;?>
+<div class="page_foot">
+    - <img src="template/assets/my.png" class="icon"> <b>Мой батл</b><br>
+    - <img src="template/assets/join.png" class="icon"> <a href="?view=join">Присоединиться</a><br>
+    - <img src="template/assets/active.png" class="icon"> <a href="?view=active">Все активные батлы</a> (<strong><?echo $this->activec; ?></strong>)<br>
+    - <img src="template/assets/wait.png" class="icon"> <a href="?view=waiting">Ожидающие противников батлы</a> (<strong><?echo $this->deactivec; ?></strong>)<br>
+</div>
+<div class="str">
+    <img src="template/assets/rules.png" class="icon"> <a href="?view=rules">Правила батлов</a>
+    <img src="template/assets/back.png" class="icon"> <a href="?view=index">Назад к участникам</a>
+</div>
+<!-- Мой батл -->
